@@ -1,0 +1,35 @@
+import numpy as np 
+import pandas as pd 
+import seaborn as sns 
+from matplotlib import pyplot as plt
+df = pd.read_csv('titanic.csv')
+print(df.head())
+print('Number of rows:', df.shape[0])
+print('Number of columns:', df.shape[1])
+print(df.dtypes)
+print(df.isnull().sum())
+df = df.drop(['PassengerId', 'Name', 'Ticket', 'Cabin'], axis=1)
+print(df.head())
+mean_age = df['Age'].mean()
+df['Age'] = df['Age'].fillna(mean_age)
+print(df.isnull().sum())
+survival_rate = df['Survived'].value_counts(normalize=True) * 100
+survival_rate.plot(kind='bar')
+plt.xlabel('Survived')
+plt.ylabel('Percentage')
+plt.title('Survival Rate of Passengers')
+plt.xticks(rotation=0)
+plt.show()
+gender_survival_rate = df.groupby(['Sex'])['Survived'].value_counts(normalize=True) * 100
+gender_survival_rate.unstack().plot(kind='bar', stacked=True)
+plt.xlabel('Sex')
+plt.ylabel('Percentage')
+plt.title('Survival Rate of Passengers by Gender')
+plt.xticks(rotation=0)
+plt.legend(['Not Survived', 'Survived'], loc='upper right')
+plt.show()
+sns.histplot(data=df, x='Age', hue='Survived', kde=True)
+plt.xlabel('Age')
+plt.ylabel('Count')
+plt.title('Age Distribution of Passengers by Survival')
+plt.show()
